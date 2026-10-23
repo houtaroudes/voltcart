@@ -20,18 +20,14 @@ export default function RecentlyViewed() {
   if (rows.length === 0) return null
 
   return (
-    <section className="mx-auto max-w-7xl px-4 pb-2" aria-label="Recently viewed">
-      <h2 className="text-lg font-bold">Recently viewed</h2>
-      <div className="mt-3 flex gap-3 overflow-x-auto pb-2">
+    <section className="container mt-16" aria-label="Recently viewed">
+      <p className="border-b-2 border-ink pb-2 font-display text-title">Recently viewed</p>
+      <div className="rail mt-6">
         {rows.map((p) => (
-          <Link
-            key={p.slug}
-            to={`/product/${p.slug}`}
-            className="flex w-40 shrink-0 flex-col rounded-xl bg-card p-3 ring-1 ring-line hover:ring-volt"
-          >
-            <img src={p.images?.[0]} alt="" className="aspect-square w-full rounded-lg object-cover" loading="lazy" />
-            <p className="mt-2 truncate text-xs font-medium">{p.name}</p>
-            <p className="text-sm font-semibold">{formatPeso(priceOf(p))}</p>
+          <Link key={p.slug} to={`/product/${p.slug}`} className="plate plate-link w-48 p-3">
+            <img src={p.images?.[0]} alt="" width="160" height="160" loading="lazy" className="aspect-square w-full border border-ink object-cover" />
+            <p className="mt-2 truncate text-sm font-medium">{p.name}</p>
+            <p className="code text-sm text-muted">{formatPeso(priceOf(p))}</p>
           </Link>
         ))}
       </div>

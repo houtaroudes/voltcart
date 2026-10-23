@@ -7,6 +7,7 @@ A tech and gadgets e-commerce storefront with a live deal zone, quick-view produ
 ```bash
 npm install
 npm run dev        # http://localhost:5300 (its own slot: pixcodes is on 5310, starter-kit on 5320)
+npm test           # node:test, no extra dependencies
 ```
 
 ## Backend (optional)

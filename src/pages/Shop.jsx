@@ -49,18 +49,22 @@ export default function Shop() {
   }, [category, search, cats])
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6">
-      <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
+    <div className="container py-10">
+      <div className="grid gap-10 lg:grid-cols-[240px_1fr]">
         {/* Filters */}
-        <aside className="h-fit rounded-2xl bg-card p-4 ring-1 ring-line lg:sticky lg:top-20">
-          <h2 className="font-bold">Filters</h2>
-          <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-mute">Category</p>
+        <aside className="h-fit lg:sticky lg:top-[88px]" aria-label="Filters">
+          <p className="border-b-2 border-ink pb-3 font-display text-lg">Filters</p>
+
+          <div className="mt-5">
+            <p className="text-sm text-muted">Category</p>
             <div className="mt-2 grid">
               <button
                 type="button"
                 onClick={() => patch('category', '')}
-                className={`rounded-lg px-2 py-1.5 text-left text-sm hover:bg-paper ${!category ? 'bg-volt/10 font-semibold text-volt-deep' : ''}`}
+                aria-pressed={!category}
+                className={`min-h-11 border-b border-rule px-2 py-2 text-left text-sm hover:bg-paper-2 ${
+                  !category ? 'bg-accent-soft font-medium text-ink' : ''
+                }`}
               >
                 All
               </button>
@@ -69,21 +73,22 @@ export default function Shop() {
                   key={c.slug}
                   type="button"
                   onClick={() => patch('category', c.slug)}
-                  className={`rounded-lg px-2 py-1.5 text-left text-sm hover:bg-paper ${category === c.slug ? 'bg-volt/10 font-semibold text-volt-deep' : ''}`}
+                  aria-pressed={category === c.slug}
+                  className={`min-h-11 border-b border-rule px-2 py-2 text-left text-sm hover:bg-paper-2 ${
+                    category === c.slug ? 'bg-accent-soft font-medium text-ink' : ''
+                  }`}
                 >
                   {c.name}
                 </button>
               ))}
             </div>
           </div>
-          <div className="mt-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-mute">Sort</p>
-            <select
-              value={sort}
-              onChange={(e) => patch('sort', e.target.value)}
-              className="mt-2 w-full rounded-lg bg-paper px-2 py-2 text-sm ring-1 ring-line"
-              aria-label="Sort products"
-            >
+
+          <div className="mt-6">
+            <label htmlFor="sort" className="text-sm text-muted">
+              Sort
+            </label>
+            <select id="sort" value={sort} onChange={(e) => patch('sort', e.target.value)} className="field mt-2">
               <option value="featured">Most viewed</option>
               <option value="price-asc">Price: low to high</option>
               <option value="price-desc">Price: high to low</option>
@@ -94,25 +99,29 @@ export default function Shop() {
 
         {/* Grid */}
         <div>
-          <div className="flex items-baseline justify-between">
-            <h1 className="text-2xl font-bold">{title}</h1>
-            <p className="text-sm text-mute">{loading ? 'Loading...' : `${items.length} products`}</p>
+          <div className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-ink pb-4">
+            <h1 className="font-display text-section">{title}</h1>
+            <p className="code text-sm text-muted">{loading ? 'Loading' : `${items.length} products`}</p>
           </div>
+
           {loading ? (
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }, (_, i) => (
-                <div key={i} className="h-72 animate-pulse rounded-2xl bg-card ring-1 ring-line" />
+                <div key={i} className="h-80 animate-pulse border-2 border-ink bg-paper-2" />
               ))}
             </div>
           ) : items.length === 0 ? (
-            <div className="mt-10 rounded-2xl bg-card p-10 text-center ring-1 ring-line">
-              <p className="font-semibold">Nothing matches that yet.</p>
-              <p className="text-sm text-mute">Try a different category or clear the search.</p>
+            <div className="mt-8 border-2 border-ink bg-plate p-10">
+              <p className="font-display text-lg">Nothing matches that yet.</p>
+              <p className="mt-2 text-muted">Try a different category or clear the search.</p>
+              <button type="button" onClick={() => setParams(new URLSearchParams(), { replace: true })} className="btn btn--primary mt-6">
+                Clear the filters
+              </button>
             </div>
           ) : (
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {items.map((p) => (
-                <ProductCard key={p.id} product={p} onQuickView={setQv} />
+            <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3">
+              {items.map((p, i) => (
+                <ProductCard key={p.id} product={p} onQuickView={setQv} eager={i === 0} />
               ))}
             </div>
           )}

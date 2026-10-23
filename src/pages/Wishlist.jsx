@@ -22,48 +22,73 @@ export default function Wishlist() {
 
   if (loaded && saved.length === 0) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <h1 className="text-3xl font-bold">No saved gadgets yet</h1>
-        <p className="mt-2 text-mute">Tap the heart on anything you like and it will wait here.</p>
-        <Link to="/shop" className="mt-6 inline-block rounded-xl bg-volt px-5 py-3 font-semibold text-white hover:bg-volt-deep">Find something to save</Link>
+      <div className="container py-16">
+        <h1 className="font-display text-section">Wishlist</h1>
+        <div className="mt-8 grid gap-8 border-t-2 border-ink pt-6 md:grid-cols-[1fr_1fr]">
+          <div>
+            <p className="font-display text-title">No saved gadgets yet</p>
+            <p className="mt-2 max-w-[46ch] text-muted">Tap the heart on anything you like and it will wait here.</p>
+          </div>
+          <div>
+            <Link to="/shop" className="btn btn--primary">
+              Find something to save
+            </Link>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6">
-      <h1 className="text-3xl font-bold">Wishlist</h1>
-      <p className="text-mute">{saved.length} saved item{saved.length === 1 ? '' : 's'}</p>
+    <div className="container py-12">
+      <div className="flex flex-wrap items-baseline justify-between gap-3 border-b-2 border-ink pb-4">
+        <h1 className="font-display text-section">Wishlist</h1>
+        <p className="code text-sm text-muted">
+          {saved.length} saved item{saved.length === 1 ? '' : 's'}
+        </p>
+      </div>
 
-      <ul className="mt-6 divide-y divide-line overflow-hidden rounded-2xl bg-card ring-1 ring-line">
+      <ul className="mt-2">
         {saved.map((p) => (
-          <li key={p.id} className="flex flex-wrap items-center gap-4 p-4">
-            <img src={p.images?.[0]} alt="" className="h-20 w-20 rounded-xl object-cover" loading="lazy" />
+          <li key={p.id} className="flex flex-wrap items-center gap-5 border-b border-rule py-5">
+            <img
+              src={p.images?.[0]}
+              alt=""
+              width="80"
+              height="80"
+              loading="lazy"
+              className="h-20 w-20 border-2 border-ink object-cover"
+            />
             <div className="min-w-0 flex-1">
-              <Link to={`/product/${p.slug}`} className="font-medium hover:text-volt">{p.name}</Link>
-              <p className="text-sm text-mute">{p.brand} - {formatPeso(priceOf(p))}</p>
+              <Link to={`/product/${p.slug}`} className="font-display text-lg leading-tight hover:underline hover:decoration-accent hover:underline-offset-4">
+                {p.name}
+              </Link>
+              <p className="mt-1 text-sm text-muted">
+                {p.brand}
+                <span className="code ml-2 text-ink">{formatPeso(priceOf(p))}</span>
+              </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => cart.add(p.id)}
-                className="rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-volt-deep"
+                onClick={() => {
+                  cart.add(p.id)
+                  wish.toggle(p.id)
+                }}
+                className="btn btn--primary btn--sm"
               >
                 Move to cart
               </button>
               <button
                 type="button"
-                onClick={() => compare.has(p.id) || compare.ids.length >= 3 ? null : compare.toggle(p.id)}
-                aria-label={`Add ${p.name} to compare`}
-                className="rounded-xl p-2.5 ring-1 ring-line text-mute hover:text-volt"
+                onClick={() => compare.toggle(p.id)}
+                aria-pressed={compare.has(p.id)}
+                aria-label={compare.has(p.id) ? `Remove ${p.name} from compare` : `Add ${p.name} to compare`}
+                className={`grid h-10 w-10 place-items-center border border-ink ${compare.has(p.id) ? 'bg-accent-soft' : 'hover:bg-paper-2'}`}
               >
                 <Scale />
               </button>
-              <button
-                type="button"
-                onClick={() => wish.toggle(p.id)}
-                className="rounded-xl px-3 py-2 text-sm text-rose-500 ring-1 ring-rose-200 hover:bg-rose-50"
-              >
+              <button type="button" onClick={() => wish.toggle(p.id)} className="btn btn--second btn--sm">
                 Remove
               </button>
             </div>
@@ -75,7 +100,7 @@ export default function Wishlist() {
         <button
           type="button"
           onClick={() => saved.forEach((p) => cart.add(p.id))}
-          className="mt-6 rounded-xl bg-volt px-5 py-3 font-semibold text-white hover:bg-volt-deep"
+          className="btn btn--second mt-8"
         >
           Add all to cart
         </button>

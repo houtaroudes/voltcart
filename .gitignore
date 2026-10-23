@@ -7,3 +7,6 @@ dist
 
 .vercel
 .env*
+
+# Local dev server log
+.dev-server.log

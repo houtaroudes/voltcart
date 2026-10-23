@@ -25,6 +25,7 @@ export const deals = [
     cta_label: 'Shop the drop',
     image_url: img('photo-1505740420928-5e560c06d30e'),
     accent: 'violet',
+    category: 'audio',
     ends_at: new Date(Date.now() + 3 * 864e5).toISOString(),
   },
   {
@@ -35,6 +36,7 @@ export const deals = [
     cta_label: 'Upgrade your desk',
     image_url: img('photo-1547394765-185e1e68f34e'),
     accent: 'cyan',
+    category: 'accessories',
     ends_at: new Date(Date.now() + 6 * 864e5).toISOString(),
   },
 ]

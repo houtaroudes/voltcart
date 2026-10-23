@@ -89,6 +89,8 @@ export function StoresProvider({ children }) {
         })
         pushToast(compare.length >= 3 && !compare.includes(id) ? 'Compare is full (3 max)' : 'Added to compare', 'cyan')
       },
+      // Replace the whole set in one go, for compare state carried in a URL.
+      set: (ids) => setCompare([...new Set(ids)].slice(0, 3)),
       clear: () => setCompare([]),
     }),
     [compare, setCompare, pushToast],
@@ -121,16 +123,17 @@ export function StoresProvider({ children }) {
 }
 
 const toneClass = {
-  volt: 'bg-volt text-white',
-  rose: 'bg-rose-500 text-white',
-  cyan: 'bg-surge text-ink',
+  volt: 'toast',
+  rose: 'toast toast--error',
+  error: 'toast toast--error',
+  cyan: 'toast',
 }
 
 function ToastStack({ toasts }) {
   return (
-    <div aria-live="polite" className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+    <div aria-live="polite" className="fixed bottom-4 right-4 z-[500] flex max-w-[min(92vw,26rem)] flex-col gap-2">
       {toasts.map((t) => (
-        <div key={t.id} className={`px-4 py-2 rounded-lg shadow-lg text-sm font-medium ${toneClass[t.tone] ?? toneClass.volt}`}>
+        <div key={t.id} className={toneClass[t.tone] ?? toneClass.volt}>
           {t.message}
         </div>
       ))}

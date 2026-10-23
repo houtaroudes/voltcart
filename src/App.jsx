@@ -7,27 +7,37 @@ import RecentlyViewed from './components/RecentlyViewed.jsx'
 import Home from './pages/Home.jsx'
 import Shop from './pages/Shop.jsx'
 import Product from './pages/Product.jsx'
+import Preview from './pages/Preview.jsx'
 import Cart from './pages/Cart.jsx'
 import Wishlist from './pages/Wishlist.jsx'
 import About from './pages/About.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const first = useRef(true)
   useEffect(() => {
+    if (hash) {
+      const el = document.getElementById(hash.slice(1))
+      if (el) {
+        el.scrollIntoView({ block: 'start' })
+        first.current = false
+        return
+      }
+    }
     if (first.current) {
       first.current = false
       return
     }
     window.scrollTo(0, 0)
-  }, [pathname])
+  }, [pathname, hash])
   return null
 }
 
 export default function App() {
   const { pathname } = useLocation()
-  const showExtras = pathname === '/' || pathname.startsWith('/product') || pathname.startsWith('/shop')
+  const showExtras =
+    pathname === '/' || pathname.startsWith('/product') || pathname.startsWith('/shop') || pathname.startsWith('/preview')
 
   return (
     <div className="flex min-h-full flex-col">
@@ -38,6 +48,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:slug" element={<Product />} />
+          <Route path="/preview/:slug" element={<Preview />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/about" element={<About />} />
